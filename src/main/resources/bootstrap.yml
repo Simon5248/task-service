@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: task-service    # 服務名稱，用於識別服務和獲取對應的配置文件
+  cloud:
+    config:
+      discovery:
+        enabled: true     # 啟用服務發現，通過 Eureka 找到配置服務
+        service-id: config-service  # 配置服務在 Eureka 中的服務ID
+      fail-fast: true    # 如果無法連接配置服務，立即失敗
+      retry:
+        initial-interval: 1000  # 初始重試間隔（毫秒）
+        max-interval: 2000      # 最大重試間隔（毫秒）
+        max-attempts: 6         # 最大重試次數
+      username: ${CONFIG_SERVER_USERNAME:config-admin}     # 配置服務的認證用戶名
+      password: ${CONFIG_SERVER_PASSWORD:config-password}  # 配置服務的認證密碼
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}  # Eureka 服務地址
+
+# 啟用重試機制
+spring.cloud.config.retry.enabled: true  # 啟用配置服務的重試機制
