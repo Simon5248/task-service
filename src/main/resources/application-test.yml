@@ -1,0 +1,65 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:postgresql://test-db:5432/taskdb
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        '[format_sql]': true
+  cache:
+    type: redis
+  redis:
+    host: ${REDIS_HOST:test-redis}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD}
+
+# 測試環境 Eureka 配置
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://test-eureka:8761/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 20
+    lease-expiration-duration-in-seconds: 60
+    instance-id: ${spring.application.name}:${random.uuid}
+
+# 測試環境日誌配置
+logging:
+  level:
+    root: INFO
+    '[com.example.taskapp]': INFO
+    '[org.springframework.web]': INFO
+    '[org.springframework.security]': INFO
+    '[org.springframework.data]': INFO
+
+# 測試環境監控配置
+management:
+  endpoint:
+    health:
+      show-details: when-authorized
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  metrics:
+    tags:
+      environment: test
+
+# Feign 客戶端配置
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: basic
+  circuitbreaker:
+    enabled: true

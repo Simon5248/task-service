@@ -1,0 +1,54 @@
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  application:
+    name: task-service
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        '[jdbc.time_zone]': UTC
+
+# 共用的安全配置
+security:
+  jwt:
+    header: Authorization
+    prefix: "Bearer "
+    
+# 共用的監控配置
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      enabled: true
+    info:
+      enabled: true
+
+# Feign 客戶端配置
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+  compression:
+    request:
+      enabled: true
+      min-request-size: 2048
+    response:
+      enabled: true
+
+# 共用的 Eureka 配置
+eureka:
+  instance:
+    prefer-ip-address: true
+
+# 共用的日誌配置
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
